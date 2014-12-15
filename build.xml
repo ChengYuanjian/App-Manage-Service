@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="App Manage Service" basedir="." default="build">
+	<property name="src.dir" value="src"/>
+	<property name="classes.dir" value="bin"/>
+	<property name="war.name" value="ams.war"/>
+	<property name="build.dir" value="build"/>
+	
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+	
+	<target name="prepare" depends="clean">
+		<mkdir dir="${build.dir}"/>
+	</target>
+	
+	<target name="build" depends="prepare">
+		<tar destfile="${build.dir}/${war.name}">
+			<fileset dir="./WebContent">
+				<include name="*/**"/>
+				<exclude name="META-INF/**"/>
+				<exclude name="WEB-INF/classes/com/cyj/**/test/**"/>
+			</fileset>
+		</tar>
+	</target>
+</project>
