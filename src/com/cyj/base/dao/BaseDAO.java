@@ -27,7 +27,7 @@ public class BaseDAO extends SqlMapClientDaoSupport   {
 		return getSqlMapClientTemplate().queryForObject(statementName, parameterObject);
 	}
 	
-	public List queryForList(String statementName, Object parameterObject)
+	public List<?> queryForList(String statementName, Object parameterObject)
 	{
 		return getSqlMapClientTemplate().queryForList(statementName, parameterObject);
 	}

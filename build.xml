@@ -15,12 +15,12 @@
 	</target>
 	
 	<target name="build" depends="prepare">
-		<tar destfile="${build.dir}/${war.name}">
+		<war destfile="${build.dir}/${war.name}">
 			<fileset dir="./WebContent">
 				<include name="*/**"/>
 				<exclude name="META-INF/**"/>
 				<exclude name="WEB-INF/classes/com/cyj/**/test/**"/>
 			</fileset>
-		</tar>
+		</war>
 	</target>
 </project>
