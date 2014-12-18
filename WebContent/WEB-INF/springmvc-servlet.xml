@@ -25,10 +25,10 @@
 	<mvc:annotation-driven />
 	<!-- 把对静态资源的访问由HandlerMapping转到DefaultServletHttpRequestHandler处理
 		<mvc:default-servlet-handler /> -->
-	<mvc:resources mapping="/images/**"
-		location="/WEB-INF/pages/images/" />
-	<mvc:resources mapping="/css/**" location="/WEB-INF/pages/css/" />
-	<mvc:resources mapping="/pages/*" location="/WEB-INF/pages/" />
+	<mvc:resources mapping="/images/**" location="images/" />
+	<mvc:resources mapping="/css/**" location="css/" />
+	<mvc:resources mapping="/pages/*" location="pages/" />
+	<mvc:resources mapping="/*.html" location="." />
 
 
 	<!-- 根据客户端的不同的请求决定不同的view进行响应, 如 /blog/1.json /blog/1.xml -->

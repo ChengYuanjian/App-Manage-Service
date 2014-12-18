@@ -144,7 +144,10 @@ public class SecurityUtil {
 	public static Key generateKey(String strKey) throws SystemException {
 		try {
 			KeyGenerator _generator = KeyGenerator.getInstance(DES);
-			_generator.init(new SecureRandom(strKey.getBytes()));
+			// 防止linux下 随机生成key
+			SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+			secureRandom.setSeed(strKey.getBytes());
+			_generator.init(secureRandom);
 			return _generator.generateKey();
 		} catch (Exception e) {
 			throw new SystemException(e);

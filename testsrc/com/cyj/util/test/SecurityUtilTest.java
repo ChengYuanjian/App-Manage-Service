@@ -18,9 +18,6 @@ public class SecurityUtilTest {
 
 	@Test
 	public void test_md51() throws SystemException {
-		String md5 = SecurityUtil.md5("1");
-		System.out.println(md5);
-
 		String accesstoken = "MM|CYJ|DEV|0";
 		String encodetoken = SecurityUtil.encode(accesstoken);//CYJ:fF6JMWH0R9YVGm7F9vG0GA==;DQ:NUd+NwnV1ZYVJqxDLQrSVg==
 		System.out.println(accesstoken + ":" + encodetoken);
