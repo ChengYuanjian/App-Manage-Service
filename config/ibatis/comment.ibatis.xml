@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   
+  "http://ibatis.apache.org/dtd/sql-map-config-2.dtd" >
+
+<sqlMap namespace="com.cyj.dao.CommentDao">	
+	
+	<typeAlias alias="comment" type="com.cyj.bo.Comment"/>
+	
+	<resultMap id="commentMap" class="comment">
+		<result property="msgid" column="n_msgid" />
+		<result property="commentid" column="n_commentid" />
+		<result property="content" column="s_content" />
+		<result property="phone" column="n_phone" />
+		<result property="commentstatus" column="n_commentstatus" />
+		<result property="commenttime" column="d_commenttime" />
+	</resultMap>
+	
+	<insert id="addComment" parameterClass="comment">
+		<![CDATA[
+		insert into t_mm_comment (n_msgid,n_commentid,n_phone,s_content,n_commentstatus,d_commenttime) 
+		values (#msgid#,nextval('seq_commentid'),#phone#,#content#,0,now())
+		]]>
+		
+	</insert>
+	
+	<update id="deleteCommentById" parameterClass="java.lang.Long">
+	<![CDATA[
+		update t_mm_comment set n_commentstatus = -1 where n_commentid=#commentid#
+	]]>
+	</update>
+	
+	<select id="getCommentByMsgId" parameterClass="java.util.HashMap" resultMap="commentMap">
+		<![CDATA[
+		SELECT t.n_msgid,
+		t.n_commentid,
+		t.s_content,
+		t.n_phone,
+		t.n_commentstatus
+		date_format(t.d_commenttime,'%Y-%m-%d %H:%i:%s') as 'd_commenttime',	
+		from t_mm_comment t
+		where t.n_msgid = #msgid#
+		and t.n_commentstatus <> -1
+		and t.n_commentid < (select n_commentid from t_mm_comment order by n_commentid desc limit #from#,1)
+		order by n_commentid desc
+		limit #to#
+		]]>
+	</select>
+	
+</sqlMap>
+

@@ -9,15 +9,25 @@
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
             http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
 
-	<!--  <bean id="baseDao" class="com.cyj.base.dao.BaseDAO">
-		<property name="sqlMapClient">
-			<ref bean="sqlMapClient" />
-		</property>
-	</bean>-->
+	<bean id="baseDao" class="com.cyj.base.dao.BaseDAO">
+		 <property name="sqlMapClientTemplate" ref="sqlMapClientTemplate" />  
+	</bean>
 
-	<bean id="userDao" class="com.cyj.dao.impl.UserDaoImpl">
+	<bean id="userDao" class="com.cyj.dao.impl.UserDaoImpl" parent="baseDao">
 	</bean>
 	
-	<bean id="petDao" class="com.cyj.dao.impl.PetDaoImpl">
+	<bean id="dictionaryDao" class="com.cyj.dao.impl.DictionaryDaoImpl" parent="baseDao">
+	</bean>
+	
+	<bean id="msgDao" class="com.cyj.dao.impl.MsgDaoImpl" parent="baseDao">
+	</bean>
+	
+	<bean id="commentDao" class="com.cyj.dao.impl.CommentDaoImpl" parent="baseDao">
+	</bean>
+	
+	<bean id="petDao" class="com.cyj.dao.impl.PetDaoImpl" parent="baseDao">
+	</bean>
+	
+	<bean id="accessLogDao" class="com.cyj.dao.impl.AccessLogDaoImpl" parent="baseDao">
 	</bean>
 </beans>

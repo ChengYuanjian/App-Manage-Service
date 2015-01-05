@@ -14,6 +14,8 @@ public class RedisUtil {
 	private int port = Integer.parseInt(PropertiesUtil.getProperties("redis.port"));
 
 	private static RedisUtil instance = null;
+	
+	private static LoggerUtil logger = new LoggerUtil(RedisUtil.class);
 
 	public static RedisUtil getInstance() {
 		if (instance == null)
@@ -22,13 +24,17 @@ public class RedisUtil {
 	}
 
 	private RedisUtil() {
-		if (pool == null) {
-			JedisPoolConfig config = new JedisPoolConfig();
-			config.setMaxTotal(maxTotal);
-			config.setMaxIdle(maxIdle);
-			config.setMaxWaitMillis(maxWaitMillis);
+		try {
+			if (pool == null) {
+				JedisPoolConfig config = new JedisPoolConfig();
+				config.setMaxTotal(maxTotal);
+				config.setMaxIdle(maxIdle);
+				config.setMaxWaitMillis(maxWaitMillis);
 
-			pool = new JedisPool(config, host, port);
+				pool = new JedisPool(config, host, port);
+			}
+		} catch (Exception e) {
+			logger.fatal(10000, e);
 		}
 	}
 

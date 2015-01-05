@@ -11,6 +11,9 @@ public class SecurityInfo implements Serializable {
 	private String appid = "";
 	private String secretid = "";
 	private String signature = "";
+	private String timestamp = "";
+	private String nonce = "";
+	private String token = "";
 	private String accesstoken = "";
 
 	public SecurityInfo(String appid, String secretid, String signature,
@@ -51,6 +54,30 @@ public class SecurityInfo implements Serializable {
 
 	public void setAccesstoken(String accesstoken) {
 		this.accesstoken = accesstoken;
+	}
+
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String getNonce() {
+		return nonce;
+	}
+
+	public void setNonce(String nonce) {
+		this.nonce = nonce;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 }

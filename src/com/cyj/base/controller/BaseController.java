@@ -14,7 +14,7 @@ public class BaseController {
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String index() {
-		return "pages/home";
+		return "index";
 	}
 
 	@RequestMapping(value = "/err/{id}", method = RequestMethod.GET)
@@ -22,6 +22,12 @@ public class BaseController {
 	RetInfo error(@PathVariable("id")
 	int id) {
 		return new RetInfo(id, PropertiesUtil.getProperties(String.valueOf(id)));
+	}
+	
+	
+	@RequestMapping(value = "/api/test", method = RequestMethod.GET)
+	public String apitest() {
+		return "../pages/apitest";
 	}
 
 }

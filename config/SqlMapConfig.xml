@@ -5,5 +5,6 @@
 	<settings lazyLoadingEnabled="true" useStatementNamespaces="true" />
 
 	<sqlMap resource="ibatis/user.ibatis.xml" />
+	<sqlMap resource="ibatis/dictionary.ibatis.xml" />
 
 </sqlMapConfig>

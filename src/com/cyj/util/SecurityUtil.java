@@ -1,9 +1,11 @@
 package com.cyj.util;
 
+import java.io.IOException;
 import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,8 +83,22 @@ public class SecurityUtil {
 		}
 	}
 
+	public static String base64encode(String strMing) {
+		BASE64Encoder base64en = new BASE64Encoder();
+		return base64en.encode(strMing.getBytes());
+	}
+
+	public static String base64decode(String strMi) throws SystemException {
+		BASE64Decoder base64De = new BASE64Decoder();
+		try {
+			return new String(base64De.decodeBuffer(strMi));
+		} catch (IOException e) {
+			throw new SystemException(e);
+		}
+	}
+
 	/**
-	 * base64 encoder
+	 * base64 encoder with a private key
 	 * 
 	 * @param strMing
 	 * @return
@@ -99,7 +115,7 @@ public class SecurityUtil {
 	}
 
 	/**
-	 * base64 decoder
+	 * base64 decoder with a private key
 	 * 
 	 * @param strMi
 	 * @return
@@ -152,7 +168,59 @@ public class SecurityUtil {
 		} catch (Exception e) {
 			throw new SystemException(e);
 		}
+	}
 
+	public static boolean validate(String signature, String timestamp,
+			String nonce) throws SystemException {
+		String token = base64decode(PropertiesUtil
+				.getProperties("token.identity"));
+		String[] arrTmp = { token, timestamp, nonce };
+		Arrays.sort(arrTmp);
+		StringBuffer sb = new StringBuffer();
+
+		for (int i = 0; i < arrTmp.length; i++) {
+			sb.append(arrTmp[i]);
+		}
+		String expectedSignature;
+		try {
+			expectedSignature = encrypt(sb.toString());
+		} catch (NoSuchAlgorithmException e) {
+			throw new SystemException(e);
+		}
+
+		if (expectedSignature.equals(signature)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 将字节数组转换成16进制字符串
+	 * 
+	 * @param b
+	 * @return
+	 */
+	private static String byte2hex(byte[] b) {
+		StringBuilder sbDes = new StringBuilder();
+		String tmp = null;
+		for (int i = 0; i < b.length; i++) {
+			tmp = (Integer.toHexString(b[i] & 0xFF));
+			if (tmp.length() == 1) {
+				sbDes.append("0");
+			}
+			sbDes.append(tmp);
+		}
+		return sbDes.toString();
+	}
+
+	private static String encrypt(String strSrc)
+			throws NoSuchAlgorithmException {
+		MessageDigest digest = MessageDigest.getInstance("SHA-1");
+		String strDes = null;
+		byte[] bt = strSrc.getBytes();
+		digest.update(bt);
+		strDes = byte2hex(digest.digest());
+		return strDes;
 	}
 
 }

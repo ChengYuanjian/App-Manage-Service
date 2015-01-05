@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   
+  "http://ibatis.apache.org/dtd/sql-map-config-2.dtd" >
+
+<sqlMap namespace="com.cyj.dao.DictionaryDao">
+	
+	<select id="getArea" parameterClass="java.lang.Integer" resultClass="java.util.HashMap">
+		<![CDATA[
+		select n_code as 'code',s_name as 'name' from t_area_dictionary where n_parentcode=#n_parentcode# order by n_code
+		]]>
+	</select>
+	
+	<select id="getPet" parameterClass="java.lang.Integer" resultClass="java.util.HashMap">
+		<![CDATA[
+		select n_id as 'code',s_petcategory as 'name' from t_pet_dictionary where n_parentid=#n_parentid# order by n_id
+		]]>
+	</select>
+	
+</sqlMap>
+

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   
+  "http://ibatis.apache.org/dtd/sql-map-config-2.dtd" >
+
+<sqlMap namespace="com.cyj.dao.PetDao">
+
+	<typeAlias alias="pet" type="com.cyj.bo.Pet"/>
+	
+	<resultMap id="petMap" class="pet">
+		<result property="phone" column="n_phone" />
+		<result property="petid" column="n_petid" />
+		<result property="petname" column="s_petname" />
+		<result property="birthday" column="d_birthday" />
+		<result property="petsex" column="s_petsex" />
+		<result property="petcategory" column="s_petcategory" />
+		<result property="pettype" column="s_pettype" />
+	</resultMap>
+	
+	
+	<select id="getPetByPhone" parameterClass="java.lang.Long" resultMap="petMap">
+		<![CDATA[
+		select n_phone,
+		n_petid,
+		s_petname,
+		date_format(d_birthday,'%Y-%m-%d') as d_birthday,
+		s_petsex,
+		s_petcategory
+		s_pettype 
+		from t_mm_pet t 
+		where t.n_phone = #phone#
+		]]>
+	</select>
+	
+	<update id="updatePetById" parameterClass="pet">
+	<![CDATA[
+		update t_mm_pet 
+	]]>
+	<dynamic prepend="set">
+		<isNotEmpty property="petname" prepend=",">
+		s_petname = #petname#
+		</isNotEmpty>
+		<isNotEmpty property="birthday" prepend=",">
+		d_birthday = str_to_date(#birthday#,'%Y-%m-%d')
+		</isNotEmpty>
+		<isNotEmpty property="petsex" prepend=",">
+		s_petsex = #petsex#
+		</isNotEmpty>
+		<isNotEmpty property="petcategory" prepend=",">
+		s_petcategory = #petcategory#
+		</isNotEmpty>
+		<isNotEmpty property="pettype" prepend=",">
+		s_pettype = #pettype#
+		</isNotEmpty>
+	</dynamic>
+	where n_phone = #phone#
+	and n_petid= #petid#
+	</update>
+	
+	<insert id="addPet" parameterClass="pet">
+		<![CDATA[
+		insert into t_mm_pet (n_phone,n_petid
+		]]>
+		<dynamic>
+			<isNotEmpty property="petname" prepend=",">
+			s_petname
+			</isNotEmpty>
+			<isNotEmpty property="birthday" prepend=",">
+			d_birthday
+			</isNotEmpty>
+			<isNotEmpty property="petsex" prepend=",">
+			s_petsex
+			</isNotEmpty>
+			<isNotEmpty property="petcategory" prepend=",">
+			s_petcategory
+			</isNotEmpty>
+			<isNotEmpty property="pettype" prepend=",">
+			s_pettype
+			</isNotEmpty>	
+		</dynamic>
+		<![CDATA[
+		) values (#phone#,nextval('seq_petid')
+		]]>
+		<dynamic>
+			<isNotEmpty property="petname" prepend=",">
+			#petname#
+			</isNotEmpty>
+			<isNotEmpty property="birthday" prepend=",">
+			str_to_date(#birthday#,'%Y-%m-%d')
+			</isNotEmpty>
+			<isNotEmpty property="petsex" prepend=",">
+			#petsex#
+			</isNotEmpty>
+			<isNotEmpty property="petcategory" prepend=",">
+			#petcategory#
+			</isNotEmpty>
+			<isNotEmpty property="pettype" prepend=",">
+			#pettype#
+			</isNotEmpty>
+		</dynamic>
+		)
+	</insert>
+	
+</sqlMap>
+

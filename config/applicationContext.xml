@@ -17,12 +17,12 @@
 
 	<context:property-placeholder location="classpath:jdbc.properties" />
 
-	<!--<bean id="propertyConfigurer"
+	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:jdbc.properties" />
-		</bean>-->
+	</bean>
 
-	<!-- DataSource数据源 
+	<!-- DataSource数据源 -->
 	<bean id="dataSource"
 		class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
@@ -34,8 +34,8 @@
 		<property name="maxActive" value="${jdbc.maxActive}" />
 		<property name="maxIdle" value="${jdbc.maxIdle}" />
 		<property name="maxWait" value="${jdbc.maxWait}" />
-	</bean>-->
-	<!-- Spring iBatis SqlMapClient 
+	</bean>
+	<!-- Spring iBatis SqlMapClient -->
 	<bean id="sqlMapClient"
 		class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
 		<property name="configLocation"
@@ -46,16 +46,22 @@
 				<value>classpath:com/cyj/**/SqlMapConfig*.ibatis.xml</value>
 			</list>
 		</property>
-	</bean>-->
+	</bean>
+	
+	<bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">  
+        <constructor-arg>  
+            <ref bean="sqlMapClient" />  
+        </constructor-arg>  
+    </bean> 
 
 
-	<!--事务管理DataSourceTransactionManager
+	<!--事务管理DataSourceTransactionManager-->
 	<bean id="txManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
-	</bean>-->
+	</bean>
 
-	<!--启动spring注解功能
+	<!--启动spring注解功能-->
 	<tx:annotation-driven transaction-manager="txManager" />
 
 	<aop:config>
@@ -84,7 +90,7 @@
 			<tx:method name="delete*" propagation="REQUIRED"
 				isolation="REPEATABLE_READ" />
 		</tx:attributes>
-	</tx:advice>-->
+	</tx:advice>
 	
 	<bean id="redisSynJob" class="com.cyj.job.RedisSynJob" />
 

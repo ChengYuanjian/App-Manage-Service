@@ -6,21 +6,61 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cyj.base.exception.SystemException;
 import com.cyj.bo.RetInfo;
 import com.cyj.bo.SecurityInfo;
+import com.cyj.bo.Token;
 import com.cyj.util.LoggerUtil;
 import com.cyj.util.PropertiesUtil;
 import com.cyj.util.SecurityUtil;
 
 @Controller
-@RequestMapping("/security")
+@RequestMapping("/auth")
 public class SecurityController {
 
 	private LoggerUtil logger = new LoggerUtil(SecurityController.class);
 
-	@RequestMapping(value = "/token", method = RequestMethod.GET)
+	@RequestMapping(value = "/token", method = RequestMethod.POST)
+	public @ResponseBody
+	RetInfo authToken(Token token) {
+		RetInfo retInfo = null;
+		
+		if(token == null)
+			retInfo = new RetInfo(-1);
+		
+		try {
+			String signature = token.getSignature();
+			String echostr = token.getEchostr();
+			long timestamp = token.getTimestamp();
+			int nonce = token.getNonce();
+			
+			if(StringUtils.isEmpty(signature)||StringUtils.isEmpty(echostr))
+				retInfo = new RetInfo(-1);
+			
+			long timelimit = Long.parseLong(PropertiesUtil
+					.getProperties("token.time.limit"));
+			if (System.currentTimeMillis() - timestamp > timelimit) {//token is expired
+				retInfo = new RetInfo(-2);
+			}
+			
+			if(SecurityUtil.validate(signature, String.valueOf(timestamp),String.valueOf(nonce)))
+				retInfo = new RetInfo(0,echostr);
+			else
+				retInfo = new RetInfo(-1);			
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
+			retInfo = new RetInfo(-1);
+		}
+		catch (SystemException e) {
+			logger.error(e.getMessage(), e);
+			retInfo = new RetInfo(-1);
+		}	
+		return retInfo;
+	}
+
+	@RequestMapping(value = "/token1", method = RequestMethod.POST)
 	public String getToken(SecurityInfo securityInfo) {
 		String appid = securityInfo.getAppid();
 		if (securityInfo == null || StringUtils.isEmpty(appid))

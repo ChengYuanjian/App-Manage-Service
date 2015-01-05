@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   
+  "http://ibatis.apache.org/dtd/sql-map-config-2.dtd" >
+
+<sqlMap namespace="com.cyj.dao.MsgDao">	
+	
+	<typeAlias alias="msg" type="com.cyj.bo.Msg"/>
+	
+	<resultMap id="msgMap" class="msg">
+		<result property="msgid" column="n_msgid" />
+		<result property="msgtime" column="d_msgtime" />
+		<result property="agreenum" column="n_agreenum" />
+		<result property="phone" column="n_phone" />
+		<result property="pictureid" column="n_pictureid" />
+		<result property="readnum" column="n_readnum" />
+		<result property="transpondnum" column="n_transpondnum" />
+		<result property="msgcontent" column="s_msgcontent" />
+		<result property="msglabel" column="s_msglabel" />
+		<result property="msgtype" column="s_msgtype" />
+		<result property="collectnum" column="n_collectionnum" />
+		<result property="commentnum" column="n_commentnum" />
+	</resultMap>
+	
+	<insert id="addMsg" parameterClass="msg">
+		<![CDATA[
+		insert into t_mm_msg (n_msgid,d_msgtime,n_phone,s_msgcontent,n_agreenum,n_readnum,n_transpondnum,n_collectionnum,n_commentnum	
+		]]>
+		<dynamic>
+			<isNotEmpty property="pictureid" prepend=",">
+			n_pictureid
+			</isNotEmpty>
+			<isNotEmpty property="msglabel" prepend=",">
+			s_msglabel
+			</isNotEmpty>
+			<isNotEmpty property="msgtype" prepend=",">
+			s_msgtype
+			</isNotEmpty>
+		</dynamic>
+		<![CDATA[
+		) values (#msgid#,now(),#phone#,#msgcontent#,0,0,0,0,0
+		]]>
+		<dynamic>
+			<isNotEmpty property="pictureid" prepend=",">
+			#pictureid#
+			</isNotEmpty>
+			<isNotEmpty property="msglabel" prepend=",">
+			#msglabel#
+			</isNotEmpty>
+			<isNotEmpty property="msgtype" prepend=",">
+			#msgtype#
+			</isNotEmpty>
+		</dynamic>
+		)
+	</insert>
+	
+	<update id="deleteMsgById" parameterClass="java.lang.Long">
+	<![CDATA[
+		update t_mm_msg set s_msgtype = 'DEL' where n_msgid=#msgid#
+	]]>
+	</update>
+	
+	<update id="updateMsgById" parameterClass="msg">
+	<![CDATA[
+		update t_mm_msg 
+	]]>
+	<dynamic prepend="set">
+		<isNotEmpty property="agreenum" prepend=",">
+		n_agreenum = #agreenum#
+		</isNotEmpty>
+		<isNotEmpty property="collectionnum" prepend=",">
+		n_collectionnum = #collectionnum#
+		</isNotEmpty>
+		<isNotEmpty property="commentnum" prepend=",">
+		n_commentnum = #commentnum#
+		</isNotEmpty>
+		<isNotEmpty property="readnum" prepend=",">
+		n_readnum = #readnum#
+		</isNotEmpty>
+		<isNotEmpty property="transpondnum" prepend=",">
+		n_transpondnum = #transpondnum#
+		</isNotEmpty>
+		<isNotEmpty property="msglabel" prepend=",">
+		s_msglabel = #msglabel#
+		</isNotEmpty>
+		<isNotEmpty property="msgtype" prepend=",">
+		s_msgtype = #msgtype#
+		</isNotEmpty>
+	</dynamic>
+	where n_msgid=#msgid#
+	</update>
+	
+	<select id="getMsgByPhone" parameterClass="java.util.HashMap" resultMap="msgMap">
+		<![CDATA[
+		SELECT t.n_msgid,
+		date_format(t.d_msgtime,'%Y-%m-%d %H:%i:%s') as 'd_msgtime',
+		t.n_agreenum,
+		t.n_collectionnum,
+		t.n_commentnum,
+		t.n_phone,
+		t.n_pictureid,
+		t.n_readnum,
+		t.n_transpondnum,
+		t.s_msgcontent,
+		t.s_msglabel,
+		t.s_msgtype
+		from t_mm_msg t
+		where t.n_phone = #phone#
+		and t.s_msgtype <> 'DEL'
+		and t.n_msgid < (select n_msgid from t_mm_msg order by n_msgid desc limit #from#,1)
+		order by n_msgid desc
+		limit #to#
+		]]>
+	</select>
+	
+	<select id="getMsgById" parameterClass="java.lang.Integer" resultMap="msgMap">
+		<![CDATA[
+		SELECT t.n_msgid,
+		date_format(t.d_msgtime,'%Y-%m-%d %H:%i:%s') as 'd_msgtime',
+		t.n_agreenum,
+		t.n_collectionnum,
+		t.n_commentnum,
+		t.n_phone,
+		t.n_pictureid,
+		t.n_readnum,
+		t.n_transpondnum,
+		t.s_msgcontent,
+		t.s_msglabel,
+		t.s_msgtype
+		from t_mm_msg t
+		where t.n_msgid = #n_msgid#
+		and t.s_msgtype <> 'DEL'
+		]]>
+	</select>
+	
+</sqlMap>
+

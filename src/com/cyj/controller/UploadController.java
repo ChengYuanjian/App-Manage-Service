@@ -111,8 +111,7 @@ public class UploadController {
 		for (String s : PropertiesUtil.getProperties("file.extend.name").split(
 				",")) {
 			if (name.endsWith(s))
-				;
-			return true;
+				return true;
 		}
 		return false;
 	}

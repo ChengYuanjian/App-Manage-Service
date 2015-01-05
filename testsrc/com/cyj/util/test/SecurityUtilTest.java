@@ -24,6 +24,17 @@ public class SecurityUtilTest {
 
 		Assert.assertEquals(accesstoken, SecurityUtil.decode(encodetoken));
 
+		String token = "APP_TOKEN";
+		String entoken =SecurityUtil.encode(token);
+		System.out.println("Base64 with a key: Token is "+token+",and encode is "+entoken+",and decode is "+SecurityUtil.decode(entoken));
+	}
+	
+	@Test
+	public void test_base64() throws SystemException
+	{
+		String token = "APP_TOKEN";
+		String entoken =SecurityUtil.base64encode(token);
+		System.out.println("Base64:Token is "+token+",and encode is "+entoken+",and decode is "+SecurityUtil.base64decode(entoken));
 	}
 
 }

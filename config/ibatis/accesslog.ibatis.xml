@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   
+  "http://ibatis.apache.org/dtd/sql-map-config-2.dtd" >
+
+<sqlMap namespace="com.cyj.dao.AccessLogDao">	
+	
+	<typeAlias alias="accessLog" type="com.cyj.bo.AccessLog"/>
+	
+	<resultMap id="accessLogMap" class="accessLog">
+		<result property="logid" column="n_logid" />
+		<result property="devicename" column="s_devicename" />
+		<result property="deviceid" column="s_deviceid" />
+		<result property="os" column="s_os" />
+		<result property="appversion" column="s_appversion" />
+		<result property="longitude" column="s_longitude" />
+		<result property="latitude" column="s_latitude" />
+		<result property="phone" column="n_phone" />
+		<result property="accesstime" column="d_accesstime" />
+		<result property="requesturi" column="s_requesturi" />
+		<result property="accessresource" column="s_accessresource" />
+	</resultMap>
+	
+	<insert id="addAccessLog" parameterClass="accessLog">
+		<![CDATA[
+		insert into t_access_log (n_logid,n_phone,d_accesstime
+		]]>
+		<dynamic>
+			<isNotEmpty property="devicename" prepend=",">
+			s_devicename
+			</isNotEmpty>
+			<isNotEmpty property="os" prepend=",">
+			s_os
+			</isNotEmpty>
+			<isNotEmpty property="appversion" prepend=",">
+			s_appversion
+			</isNotEmpty>
+			<isNotEmpty property="deviceid" prepend=",">
+			s_deviceid
+			</isNotEmpty>
+			<isNotEmpty property="longitude" prepend=",">
+			s_longitude
+			</isNotEmpty>
+			<isNotEmpty property="latitude" prepend=",">
+			s_latitude
+			</isNotEmpty>
+			<isNotEmpty property="requesturi" prepend=",">
+			s_requesturi
+			</isNotEmpty>
+			<isNotEmpty property="accessresource" prepend=",">
+			s_accessresource
+			</isNotEmpty>
+		</dynamic>
+		<![CDATA[
+		) values (nextval('seq_logid'),#phone#,now()
+		]]>
+		<dynamic>
+			<isNotEmpty property="devicename" prepend=",">
+			#devicename#
+			</isNotEmpty>
+			<isNotEmpty property="os" prepend=",">
+			#os#
+			</isNotEmpty>
+			<isNotEmpty property="appversion" prepend=",">
+			#appversion#
+			</isNotEmpty>
+			<isNotEmpty property="deviceid" prepend=",">
+			#deviceid#
+			</isNotEmpty>
+			<isNotEmpty property="longitude" prepend=",">
+			#longitude#
+			</isNotEmpty>
+			<isNotEmpty property="latitude" prepend=",">
+			#latitude#
+			</isNotEmpty>
+			<isNotEmpty property="requesturi" prepend=",">
+			#requesturi#
+			</isNotEmpty>
+			<isNotEmpty property="accessresource" prepend=",">
+			#accessresource#
+			</isNotEmpty>
+		</dynamic>
+		)
+	</insert>
+	
+	
+</sqlMap>
+

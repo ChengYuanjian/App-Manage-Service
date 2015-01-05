@@ -1,34 +1,46 @@
 package com.cyj.dao.impl;
 
-import java.util.Date;
+import java.util.List;
 
+import com.cyj.base.dao.BaseDAO;
 import com.cyj.bo.Pet;
-import com.cyj.bo.RetInfo;
 import com.cyj.dao.PetDao;
+import com.cyj.util.LoggerUtil;
 
-public class PetDaoImpl implements PetDao {
+public class PetDaoImpl extends BaseDAO implements PetDao {
+
+	private String namespace = "com.cyj.dao.PetDao";
+	private LoggerUtil logger = new LoggerUtil(PetDaoImpl.class);
 
 	@Override
-	public RetInfo addPet(Pet pet) {
-		return new RetInfo(1);
+	public boolean addPet(Pet pet) {
+		try {
+			add(namespace + ".addPet", pet);
+			return true;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		}
 	}
 
 	@Override
-	public Pet queryPetById(long id) {
-		Pet pet = new Pet();
-		pet.setPetid(id);
-		pet.setBirthday(new Date());
-		pet.setMasterid(1l);
-		pet.setPetcategory("狗");
-		pet.setPetname("哈尼");
-		pet.setPetsex(1);
-		pet.setPettype("中华田园犬");
-		return pet;
+	public List<Pet> queryPetByPhone(long phone) {
+		try {
+			return (List<Pet>) queryForList(namespace + ".getPetByPhone", phone);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return null;
+		}
 	}
 
 	@Override
-	public RetInfo updatePet(Pet pet) {
-		return new RetInfo(1);
+	public int updatePet(Pet pet) {
+		try {
+			return update(namespace + ".updatePetById", pet);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return 0;
+		}
 	}
 
 }

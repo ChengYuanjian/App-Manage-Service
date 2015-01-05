@@ -1,14 +1,15 @@
 package com.cyj.dao;
 
+import java.util.List;
+
 import com.cyj.bo.Pet;
-import com.cyj.bo.RetInfo;
 
 public interface PetDao {
 	
-	public Pet queryPetById(long id);
+	public List<Pet> queryPetByPhone(long phone);
 	
-	public RetInfo addPet(Pet pet);
+	public boolean addPet(Pet pet);
 
-	public RetInfo updatePet(Pet pet);
+	public int updatePet(Pet pet);
 
 }

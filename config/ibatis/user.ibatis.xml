@@ -1,12 +1,251 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   
   "http://ibatis.apache.org/dtd/sql-map-config-2.dtd" >
-  
-<sqlMap namespace="user">
-	<select id="getSysdate" resultClass="java.lang.String">
+
+<sqlMap namespace="com.cyj.dao.UserDao">
+
+	<typeAlias alias="user" type="com.cyj.bo.User"/>
+	<typeAlias alias="userdetail" type="com.cyj.bo.UserDetail"/>
+	
+	<resultMap id="userMap" class="user">
+		<result property="nickname" column="s_nickname" />
+		<result property="phone" column="n_phone" />
+		<result property="regtime" column="d_regtime" />
+		<result property="iconurl" column="s_iconurl" />
+	</resultMap>
+	
+	<resultMap id="userdetailMap" class="userdetail">
+		<result property="phone" column="n_phone" />
+		<result property="sex" column="s_sex" />
+		<result property="province" column="s_province" />
+		<result property="city" column="s_city" />
+		<result property="discrict" column="s_discrict" />
+		<result property="constellation" column="s_constellation" />
+		<result property="birthday" column="d_birthday" />
+		<result property="bloodtype" column="s_bloodtype" />
+		<result property="intro" column="s_intro" />
+		<result property="email" column="s_email" />
+		<result property="qq" column="s_qq" />
+		<result property="profession" column="s_profession" />
+		<result property="label" column="s_label" />
+		<result property="wechat" column="s_wechat" />
+		<result property="weibo" column="s_weibo" />
+		<result property="updatetime" column="d_updatetime" />
+	</resultMap>
+	
+	<select id="getUserByPhone" parameterClass="java.lang.Long" resultMap="userMap">
 		<![CDATA[
-		select to_char(sysdate,'YYYYMMDD') from dual
+		select s_nickname,date_format(d_regtime,'%Y-%m-%d %H:%i:%s') as d_regtime,s_iconurl from t_mm_user t where t.n_phone = #phone#
 		]]>
 	</select>
+	
+	<select id="getUserByName" parameterClass="java.util.HashMap" resultMap="userMap">
+		<![CDATA[
+		select s_nickname,n_phone,date_format(d_regtime,'%Y-%m-%d %H:%i:%s') as d_regtime,s_iconurl from t_mm_user t where t.s_nickname like '%$nickname$%' 
+		and d_regtime > (select d_regtime from t_mm_user order by d_regtime limit #from#,1)
+		order by d_regtime limit #to#
+		]]>
+	</select>
+	
+	<insert id="addUser" parameterClass="user">
+		<![CDATA[
+		insert into t_mm_user (s_nickname,n_phone,d_regtime,s_iconurl)
+		values (#nickname#,#phone#,str_to_date(#regtime#,'%Y-%m-%d %H:%i:%s'),#iconurl#)
+		]]>
+	</insert>
+	
+	<update id="updateUserByPhone" parameterClass="user">
+	<![CDATA[
+		update t_mm_user 
+	]]>
+	<dynamic prepend="set">
+		<isNotEmpty property="nickname" prepend=",">
+		s_nickname = #nickname#
+		</isNotEmpty>
+		<isNotEmpty property="iconurl" prepend=",">
+		s_iconurl = #iconurl#
+		</isNotEmpty>
+	</dynamic>
+	where n_phone=#phone#
+	</update>
+	
+	<select id="getUserDetailByPhone" parameterClass="java.lang.Long" resultMap="userdetailMap">
+		<![CDATA[
+		select s_sex, 
+		s_province,
+		s_city,
+		s_discrict,
+		s_constellation,
+		date_format(d_birthday,'%Y-%m-%d') as d_birthday, 
+		s_bloodtype,
+		s_intro,
+		s_email,
+		s_qq,
+		s_profession,
+		s_label,
+		s_wechat,
+		s_weibo
+		from t_mm_userdetail t 
+		where t.n_phone = #phone#
+		]]>
+	</select>
+	
+	<insert id="addUserDetail" parameterClass="userdetail">
+		<![CDATA[
+		insert into t_mm_userdetail (n_phone,d_updatetime
+		]]>
+		<dynamic>
+			<isNotEmpty property="sex" prepend=",">
+			s_sex
+			</isNotEmpty>
+			<isNotEmpty property="province" prepend=",">
+			s_province
+			</isNotEmpty>
+			<isNotEmpty property="city" prepend=",">
+			s_city
+			</isNotEmpty>
+			<isNotEmpty property="discrict" prepend=",">
+			s_discrict
+			</isNotEmpty>
+			<isNotEmpty property="constellation" prepend=",">
+			s_constellation
+			</isNotEmpty>
+			<isNotEmpty property="birthday" prepend=",">
+			d_birthday
+			</isNotEmpty>
+			<isNotEmpty property="bloodtype" prepend=",">
+			s_bloodtype
+			</isNotEmpty>
+			<isNotEmpty property="intro" prepend=",">
+			s_intro
+			</isNotEmpty>
+			<isNotEmpty property="email" prepend=",">
+			s_email
+			</isNotEmpty>
+			<isNotEmpty property="qq" prepend=",">
+			s_qq
+			</isNotEmpty>
+			<isNotEmpty property="profession" prepend=",">
+			s_profession
+			</isNotEmpty>
+			<isNotEmpty property="label" prepend=",">
+			s_label
+			</isNotEmpty>
+			<isNotEmpty property="wechat" prepend=",">
+			s_wechat
+			</isNotEmpty>
+			<isNotEmpty property="weibo" prepend=",">
+			s_weibo
+			</isNotEmpty>
+		</dynamic>
+		<![CDATA[
+		) values (#phone#,now()
+		]]>
+		<dynamic>
+			<isNotEmpty property="sex" prepend=",">
+			#sex#
+			</isNotEmpty>
+			<isNotEmpty property="province" prepend=",">
+			#province#
+			</isNotEmpty>
+			<isNotEmpty property="city" prepend=",">
+			#city#
+			</isNotEmpty>
+			<isNotEmpty property="discrict" prepend=",">
+			#discrict#
+			</isNotEmpty>
+			<isNotEmpty property="constellation" prepend=",">
+			#constellation#
+			</isNotEmpty>
+			<isNotEmpty property="birthday" prepend=",">
+			str_to_date(#birthday#,'%Y-%m-%d')
+			</isNotEmpty>
+			<isNotEmpty property="bloodtype" prepend=",">
+			#bloodtype#
+			</isNotEmpty>
+			<isNotEmpty property="intro" prepend=",">
+			#intro#
+			</isNotEmpty>
+			<isNotEmpty property="email" prepend=",">
+			#email#
+			</isNotEmpty>
+			<isNotEmpty property="qq" prepend=",">
+			#qq#
+			</isNotEmpty>
+			<isNotEmpty property="profession" prepend=",">
+			#profession#
+			</isNotEmpty>
+			<isNotEmpty property="label" prepend=",">
+			#label#
+			</isNotEmpty>
+			<isNotEmpty property="wechat" prepend=",">
+			#wechat#
+			</isNotEmpty>
+			<isNotEmpty property="weibo" prepend=",">
+			#weibo#
+			</isNotEmpty>
+		</dynamic>
+		)
+	</insert>
+	
+	<update id="updateUserDetail" parameterClass="userdetail">
+		<![CDATA[
+		update t_mm_userdetail set d_updatetime = now()
+		]]>
+		<dynamic>
+			<isNotEmpty property="sex" prepend=",">
+			s_sex = #sex#
+			</isNotEmpty>
+			<isNotEmpty property="province" prepend=",">
+			s_province = #province#
+			</isNotEmpty>
+			<isNotEmpty property="city" prepend=",">
+			s_city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="discrict" prepend=",">
+			s_discrict = #discrict#
+			</isNotEmpty>
+			<isNotEmpty property="constellation" prepend=",">
+			s_constellation = #constellation#
+			</isNotEmpty>
+			<isNotEmpty property="birthday" prepend=",">
+			d_birthday = str_to_date(#birthday#,'%Y-%m-%d')
+			</isNotEmpty>
+			<isNotEmpty property="bloodtype" prepend=",">
+			s_bloodtype = #bloodtype#
+			</isNotEmpty>
+			<isNotEmpty property="intro" prepend=",">
+			s_intro = #intro#
+			</isNotEmpty>
+			<isNotEmpty property="email" prepend=",">
+			s_email = #email#
+			</isNotEmpty>
+			<isNotEmpty property="qq" prepend=",">
+			s_qq = #qq#
+			</isNotEmpty>
+			<isNotEmpty property="profession" prepend=",">
+			s_profession = #profession#
+			</isNotEmpty>
+			<isNotEmpty property="label" prepend=",">
+			s_label = #label#
+			</isNotEmpty>
+			<isNotEmpty property="wechat" prepend=",">
+			s_wechat = #wechat#
+			</isNotEmpty>
+			<isNotEmpty property="weibo" prepend=",">
+			s_weibo = #weibo#
+			</isNotEmpty>
+		</dynamic>
+		<![CDATA[
+		where n_phone = #phone#
+		]]>		
+	</update>
+	
+	<delete id="deleteUserDetail" parameterClass="java.lang.Long">
+		<![CDATA[
+		delete from t_mm_userdetail t where t.n_phone = #phone#
+		]]>
+	</delete>
+	
 </sqlMap>
 

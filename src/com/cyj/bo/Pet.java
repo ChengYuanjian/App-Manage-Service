@@ -1,7 +1,6 @@
 package com.cyj.bo;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class Pet implements Serializable{
 
@@ -10,18 +9,19 @@ public class Pet implements Serializable{
 	 */
 	private static final long serialVersionUID = 8781498560984983295L;
 	
-	private long masterid;
+	private long phone;
 	private long petid;
 	private String petname;
-	private Date birthday;//format: yyyy-MM-dd
-	private int petsex;//1:male;0:female
+	private String birthday;//format: yyyy-MM-dd
+	private String petsex;
 	private String petcategory;
 	private String pettype;
-	public long getMasterid() {
-		return masterid;
+	
+	public long getPhone() {
+		return phone;
 	}
-	public void setMasterid(long masterid) {
-		this.masterid = masterid;
+	public void setPhone(long phone) {
+		this.phone = phone;
 	}
 	public long getPetid() {
 		return petid;
@@ -35,16 +35,16 @@ public class Pet implements Serializable{
 	public void setPetname(String petname) {
 		this.petname = petname;
 	}
-	public Date getBirthday() {
+	public String getBirthday() {
 		return birthday;
 	}
-	public void setBirthday(Date birthday) {
+	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
-	public int getPetsex() {
+	public String getPetsex() {
 		return petsex;
 	}
-	public void setPetsex(int petsex) {
+	public void setPetsex(String petsex) {
 		this.petsex = petsex;
 	}
 	public String getPetcategory() {
